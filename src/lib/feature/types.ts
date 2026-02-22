@@ -1,0 +1,1 @@
+export interface UserCredentials {\n  email: string;\n  password: string;\n}\n\nexport interface AuthResponse {\n  success: boolean;\n  message?: string;\n  token?: string;\n}
