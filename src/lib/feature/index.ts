@@ -1,12 +1,20 @@
 import { UserCredentials, AuthResponse } from './types';
-import dotenv from 'dotenv';
-import axios from 'axios';
 
-dotenv.config();
+const usersDb: Record<string, string> = {};
 
-const API_URL = process.env.API_URL;
+export const registerUser = async (credentials: UserCredentials): Promise<AuthResponse> => {
+  const { email, password } = credentials;
+  if (usersDb[email]) {
+    return { success: false, message: 'User already exists' };
+  }
+  usersDb[email] = password;
+  return { success: true, message: 'User registered successfully' };
+};
 
-export const authenticateUser = async (credentials: UserCredentials): Promise<AuthResponse> => {
-  const response = await axios.post(`${API_URL}/authenticate`, credentials);
-  return response.data;
+export const loginUser = async (credentials: UserCredentials): Promise<AuthResponse> => {
+  const { email, password } = credentials;
+  if (!usersDb[email] || usersDb[email] !== password) {
+    return { success: false, message: 'Invalid email or password' };
+  }
+  return { success: true, message: 'Login successful', token: 'dummy-token' };
 };
